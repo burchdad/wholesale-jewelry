@@ -2,21 +2,22 @@
 
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { collections, products } from '@/lib/data';
 import ProductCard from '@/components/collections/ProductCard';
 import FilterSidebar from '@/components/collections/FilterSidebar';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 
 interface Props {
-  params: { category: string };
+  params: Promise<{ category: string }>;
 }
 
 export default function CollectionPage({ params }: Props) {
-  const collection = collections.find((c) => c.slug === params.category);
+  const { category } = React.use(params);
+  const collection = collections.find((c) => c.slug === category);
   if (!collection) notFound();
 
-  const collectionProducts = products.filter((p) => p.collection === params.category);
+  const collectionProducts = products.filter((p) => p.collection === category);
 
   const [activeFilters, setActiveFilters] = useState<Record<string, string[]>>({});
 
